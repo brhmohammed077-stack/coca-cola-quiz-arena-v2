@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#10090b" />
+  <title>Coca-Cola Quiz Arena</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="Coca-Cola Quiz Arena"><span class="brand-script">Coca-Cola</span><span class="brand-sub">QUIZ ARENA</span></a>
+    <div class="top-status"><span class="live-dot"></span><span id="connection-label">وضع العرض التجريبي</span></div>
+    <button class="ghost-btn" id="home-btn">الرئيسية</button>
+  </header>
+
+  <main>
+    <section id="landing-screen" class="screen landing-screen active">
+      <div class="hero-copy">
+        <div class="eyebrow"><span></span> LIVE CLASSROOM CHALLENGE</div>
+        <h1>المعرفة تصنع<br><em>الفارق.</em></h1>
+        <p>عشرة أفواج. سؤال واحد. فرصة واحدة للفوز.<br>هل تستطيعون ملء القارورة أولًا؟</p>
+        <div class="hero-actions">
+          <button class="primary-btn" id="team-entry">دخول الأفواج <span>←</span></button>
+          <button class="outline-btn" id="host-entry">دخول المنظّم</button>
+        </div>
+        <div class="hero-meta"><span>10 أفواج</span><i></i><span>6 اختيارات</span><i></i><span>5 ثوانٍ للإجابة</span></div>
+      </div>
+      <div class="hero-bottle-wrap">
+        <div class="orbit orbit-a"></div><div class="orbit orbit-b"></div>
+        <div class="hero-glow"></div>
+        <div class="bottle-3d hero-bottle">
+          <div class="bottle-cap"></div><div class="bottle-neck"></div><div class="bottle-shoulder"></div>
+          <div class="bottle-body"><div class="liquid" id="landing-liquid"></div><div class="glass-shine"></div><div class="bottle-label"><span class="label-script">Coca-Cola</span></div></div>
+          <div class="bottle-base"></div>
+        </div>
+        <div class="floating-tag"><b id="landing-fill">0%</b><span>مستوى الامتلاء</span></div>
+      </div>
+    </section>
+
+    <section id="team-login-screen" class="screen narrow-screen">
+      <button class="back-link" data-back>← العودة</button>
+      <div class="section-heading"><div class="eyebrow">TEAM ACCESS</div><h2>اختر مقعد فريقك</h2><p>لكل فوج رمز دخول خاص ومقعد واحد.</p></div>
+      <div class="team-grid" id="team-grid"></div>
+      <div class="login-form glass-card">
+        <label for="team-code">رمز دخول الفوج <span id="selected-team-label">— لم يتم اختيار فوج</span></label>
+        <div class="input-row"><input id="team-code" type="password" placeholder="أدخل الرمز المخصص لك" autocomplete="off"><button class="primary-btn" id="join-team">دخول الساحة</button></div>
+        <p class="hint">أدخل رمز الفوج الذي يمنحك إياه المنظّم.</p>
+      </div>
+    </section>
+
+    <section id="host-login-screen" class="screen narrow-screen">
+      <button class="back-link" data-back>← العودة</button>
+      <div class="section-heading"><div class="eyebrow">HOST CONTROL</div><h2>مساحة المنظّم</h2><p>تحكّم في الأسئلة، التوقيت، وترتيب الأفواج.</p></div>
+      <div class="glass-card host-login-card">
+        <label for="host-code">رمز المنظّم</label><input id="host-code" type="password" placeholder="أدخل رمز المنظّم">
+        <button class="primary-btn full-btn" id="join-host">فتح لوحة التحكّم</button>
+        <p class="hint">استخدم رمز المنظّم الذي ظهر عند تهيئة المسابقة أول مرة.</p>
+        <div class="setup-divider"></div>
+        <label for="setup-key">تهيئة المسابقة لأول مرة</label>
+        <input id="setup-key" type="password" placeholder="رمز ARENA_SETUP_KEY من أسرار Supabase" autocomplete="off">
+        <button class="outline-btn full-btn" id="initialize-arena">إنشاء المسابقة ورموز الأفواج</button>
+        <p class="hint">يُستخدم هذا الخيار مرة واحدة فقط بعد نشر قاعدة البيانات ووظيفة arena.</p>
+      </div>
+    </section>
+
+    <section id="arena-screen" class="screen arena-screen">
+      <div class="arena-heading"><div><div class="eyebrow">LIVE MATCH <span class="live-dot"></span></div><h2>ساحة المنافسة</h2></div><div class="round-chip">الجولة <b id="round-number">01</b> <span>/ 10</span></div></div>
+      <div class="arena-grid">
+        <aside class="side-panel queue-panel">
+          <div class="panel-title"><span>01</span><div><h3>ترتيب الضغط</h3><p>الأسرع أولًا</p></div></div>
+          <div id="queue-list" class="queue-list"><div class="empty-state">بانتظار ضغط الأفواج على القارورة</div></div>
+          <div class="queue-foot"><span class="live-dot"></span> <span id="buzz-count">0</span> / 10 أفواج سجّلت</div>
+        </aside>
+
+        <section class="center-stage">
+          <div class="question-card">
+            <div class="question-top"><span class="question-tag">السؤال الحالي</span><span class="timer-badge" id="phase-timer">جاهزون؟</span></div>
+            <h1 id="question-text">بانتظار السؤال من المنظّم</h1>
+            <p id="question-subtitle">ستظهر هنا الأسئلة لجميع الأفواج في اللحظة نفسها.</p>
+          </div>
+          <div class="bottle-stage">
+            <div class="stage-ring ring-one"></div><div class="stage-ring ring-two"></div>
+            <div class="stage-light"></div>
+            <button class="bottle-button" id="buzz-bottle" aria-label="اضغط لتسجيل طلب الإجابة">
+              <div class="bottle-3d arena-bottle">
+                <div class="bottle-cap"></div><div class="bottle-neck"></div><div class="bottle-shoulder"></div>
+                <div class="bottle-body"><div class="liquid" id="arena-liquid"></div><div class="glass-shine"></div><div class="bottle-label"><span class="label-script">Coca-Cola</span></div></div><div class="bottle-base"></div>
+              </div>
+            </button>
+            <div class="fill-readout"><strong id="fill-percent">0%</strong><span>من القارورة اكتمل</span></div>
+            <div class="bottle-hint" id="bottle-hint">تظهر إمكانية الضغط بعد انتهاء العدّ التنازلي</div>
+          </div>
+          <div class="answer-area" id="answer-area">
+            <div class="answer-state" id="answer-state">بانتظار بدء الجولة…</div>
+            <div class="options-grid" id="options-grid"></div>
+          </div>
+        </section>
+
+        <aside class="side-panel score-panel">
+          <div class="panel-title"><span>02</span><div><h3>لوحة النقاط</h3><p>الترتيب المباشر</p></div></div>
+          <div id="score-list" class="score-list"></div>
+          <div class="score-foot"><span>الإجابات الصحيحة</span><b id="correct-count">0</b></div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="host-screen" class="screen host-screen">
+      <div class="arena-heading"><div><div class="eyebrow">ADMINISTRATOR / HOST</div><h2>لوحة تحكّم المنظّم</h2></div><span class="admin-chip">صلاحيات المنظّم</span></div>
+      <div class="host-layout">
+        <div class="host-main glass-card">
+          <div class="host-card-head"><div><h3>إدارة الجولة الحالية</h3><p>كل إجراء ينعكس على شاشة الأفواج في الوضع التجريبي.</p></div><span class="round-chip">الجولة <b id="host-round">01</b></span></div>
+          <label for="host-question">نص السؤال</label><textarea id="host-question" rows="2">من هو مؤسس شركة كوكاكولا؟</textarea>
+          <div class="host-options" id="host-options"></div>
+          <div class="host-actions">
+            <button class="primary-btn" id="start-question">إطلاق السؤال والعدّ 3 ← 0</button>
+            <button class="outline-btn" id="next-question">السؤال التالي</button>
+            <button class="danger-btn" id="reset-match">إعادة ضبط المسابقة</button>
+            <button class="outline-btn" id="finish-match">إنهاء المسابقة وعرض النتائج</button>
+          </div>
+          <div class="host-note" id="host-note">اختر الإجابة الصحيحة من الخيارات ثم أطلق السؤال.</div>
+          <pre class="access-codes" id="access-codes" hidden></pre>
+          <button class="outline-btn" id="copy-access-codes" type="button">نسخ رموز الدخول</button>
+        </div>
+        <div class="host-side">
+          <div class="glass-card mini-stat"><span>نسبة امتلاء القارورة</span><strong id="host-fill">0%</strong><div class="progress-track"><i id="host-progress"></i></div></div>
+          <div class="glass-card mini-stat"><span>الأفواج المتصلة</span><strong>10 <small>/ 10</small></strong></div>
+          <div class="glass-card mini-stat"><span>ترتيب الأفواج</span><div id="host-score-list" class="host-score-list"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="result-screen" class="screen result-screen">
+      <div class="eyebrow">MATCH COMPLETE</div><h2>انتهى التحدّي</h2><p>هذه هي النتيجة النهائية للأفواج.</p>
+      <div class="winner-card" id="winner-card"></div><div class="final-ranking" id="final-ranking"></div>
+      <button class="primary-btn" id="back-to-host">العودة إلى لوحة المنظّم</button>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status"></div>
+  <footer><span>COCA-COLA QUIZ ARENA</span><span>تجربة تعليمية تفاعلية</span></footer>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
