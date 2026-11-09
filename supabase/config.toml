@@ -1,0 +1,2 @@
+[functions.arena]
+verify_jwt = false
